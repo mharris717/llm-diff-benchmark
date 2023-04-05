@@ -1,8 +1,7 @@
-// import simpleGit, { CleanOptions, ResetMode } from "simple-git";
 import childProcess from "child_process";
 import fs from "fs";
 import path from "path";
-import { temporaryFile, temporaryDirectory } from "tempy";
+import os from "os";
 
 const cases: BenchmarkCase[] = [
   {
@@ -25,8 +24,13 @@ type Invoke = (sourcePath: string, userPrompt: string) => Promise<void>;
 // set a const for widgets directory based on path of this file
 // const baseWidgetsPath = path.join(__dirname, "..", "widgets");
 
+function randInt() {
+  return Math.floor(Math.random() * 1000000000000);
+}
+
 function freshCopyOfSelf() {
-  const root = temporaryDirectory();
+  const root = path.join(os.tmpdir(), `${randInt()}`);
+  fs.mkdirSync(root);
   const self = path.join(__dirname, "..");
   childProcess.execSync(`cp -r ${self} ${root}`);
   return path.join(root, "diff-benchmark");
@@ -52,7 +56,7 @@ class RunBenchmark {
   async runTests() {
     try {
       childProcess.execSync(
-        `cd ${this.tmpWidgetsPath} && npm run test -- --run --testNamePattern "${this.benchmarkCase.goal}"`
+        `cd ${this.tmpWidgetsPath} && npm install && npm run test -- --run --testNamePattern "${this.benchmarkCase.goal}"`
       );
       return true;
     } catch {
