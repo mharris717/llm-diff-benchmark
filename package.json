@@ -1,16 +1,17 @@
 {
-    "name": "diff-benchmark-widget",
-    "version": "0.0.0-development",
+    "name": "llm-diff-benchmark",
+    "version": "0.0.1",
     "description": "N/A",
     "author": "Mike Harris",
     "license": "MIT",
-    "main": "src/benchmark.ts",
+    "main": "dist/src/benchmark.js",
     "engines": {
         "node": ">= 14"
     },
     "scripts": {
         "test": "vitest",
-        "bench": "ts-node src/benchmark.ts"
+        "bench": "ts-node src/benchmark.ts",
+        "build": "tsc"
     },
     "dependencies": {
         "ts-node": "^10.9.1",
