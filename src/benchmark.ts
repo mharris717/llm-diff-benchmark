@@ -87,17 +87,11 @@ class RunBenchmarks {
   }
 }
 
-async function registerContestant(invoke: Invoke) {
+export async function registerContestant(invoke: Invoke) {
   const runner = new RunBenchmarks(cases, invoke, "dfgd");
   const results = await runner.run();
   console.log("results", results);
 }
-
-registerContestant(async (sourcePath, userPrompt) => {
-  console.log("userPrompt", userPrompt);
-  const f = `${sourcePath}/src/widget.ts`;
-  replaceInFile(f, "price", "dollarPrice");
-});
 
 function replaceInFile(f: string, orig: string, newStr: string) {
   let body = fs.readFileSync(f).toString();
@@ -105,4 +99,16 @@ function replaceInFile(f: string, orig: string, newStr: string) {
     body = body.replace(orig, newStr);
   }
   fs.writeFileSync(f, body);
+}
+
+function main() {
+  registerContestant(async (sourcePath, userPrompt) => {
+    console.log("userPrompt", userPrompt);
+    const f = `${sourcePath}/src/widget.ts`;
+    replaceInFile(f, "price", "dollarPrice");
+  });
+}
+
+if (require.main === module) {
+  main();
 }
