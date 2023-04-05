@@ -1,0 +1,17 @@
+{
+    "name": "diff-benchmark-widget",
+    "version": "0.0.0-development",
+    "description": "N/A",
+    "author": "Mike Harris",
+    "license": "MIT",
+    "engines": {
+        "node": ">= 14"
+    },
+    "scripts": {
+        "test": "vitest"
+    },
+    "dependencies": {
+        "tempy": "^3.0.0",
+        "vitest": "^0.29.8"
+    }
+}
