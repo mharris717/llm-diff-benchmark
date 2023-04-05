@@ -31,9 +31,9 @@ function randInt() {
 function freshCopyOfSelf() {
   const root = path.join(os.tmpdir(), `${randInt()}`);
   fs.mkdirSync(root);
-  const self = path.join(__dirname, "..");
+  const self = path.join(__dirname, "..", "..");
   childProcess.execSync(`cp -r ${self} ${root}`);
-  return path.join(root, "diff-benchmark");
+  return path.join(root, "llm-diff-benchmark");
 }
 
 class RunBenchmark {
