@@ -33,6 +33,9 @@ function freshCopyOfSelf() {
   fs.mkdirSync(root);
   const self = path.join(__dirname, "..", "..");
   childProcess.execSync(`cp -r ${self} ${root}`);
+  childProcess.execSync(
+    `mv ${root}/diff-benchmark ${root}/llm-diff-benchmark || true`
+  );
   return path.join(root, "llm-diff-benchmark");
 }
 
