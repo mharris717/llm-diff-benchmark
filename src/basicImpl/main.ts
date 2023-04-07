@@ -1,20 +1,17 @@
 import fs from "fs";
 import { registerContestant } from "../benchmark";
-import { extractFromTicks, LINES, SimplePrompt } from "./prompt";
+import { SimplePrompt } from "./prompt";
 
 const invoke = async (path: string, goal: string) => {
   console.log("Goal", goal);
-  const body = fs.readFileSync(`${path}/src/widget.ts`).toString();
-  const prompt = new SimplePrompt({
-    lines: LINES,
-    data: {
-      goal,
-      "widget.js": body,
-    },
+  const srcFile = `${path}/src/widget.ts`;
+  const body = fs.readFileSync(srcFile).toString();
+  const prompt = SimplePrompt.withStandardInstructions({
+    goal,
+    "src/widget.js": body,
   });
-  const reply = await prompt.ask();
-  const code = extractFromTicks(reply);
-  fs.writeFileSync(`${path}/src/widget.ts`, code);
+  const code = await prompt.askForCode();
+  fs.writeFileSync(srcFile, code);
 };
 
 function main() {

@@ -19,24 +19,30 @@ interface BenchmarkCase {
 
 type Invoke = (sourcePath: string, userPrompt: string) => Promise<void>;
 
-// const widgetPath = "/Users/mharris717/code/orig/diff-benchmark-widget-repo";
-
-// set a const for widgets directory based on path of this file
-// const baseWidgetsPath = path.join(__dirname, "..", "widgets");
-
 function randInt() {
   return Math.floor(Math.random() * 1000000000000);
 }
 
+function selfPath() {
+  if (__filename.endsWith(".ts")) {
+    return path.join(__dirname, "..");
+  } else {
+    return path.join(__dirname, "..", "..");
+  }
+}
+
 function freshCopyOfSelf() {
+  console.log("Creating fresh copy");
   const root = path.join(os.tmpdir(), `${randInt()}`);
   fs.mkdirSync(root);
-  const self = path.join(__dirname, "..", "..");
+  const self = selfPath();
   childProcess.execSync(`cp -r ${self} ${root}`);
   childProcess.execSync(
     `mv ${root}/diff-benchmark ${root}/llm-diff-benchmark || true`
   );
-  return path.join(root, "llm-diff-benchmark");
+  const res = path.join(root, "llm-diff-benchmark");
+  console.log(`Created fresh copy at ${res}`);
+  return res;
 }
 
 class RunBenchmark {
@@ -96,15 +102,15 @@ export async function registerContestant(invoke: Invoke) {
   console.log("results", results);
 }
 
-function replaceInFile(f: string, orig: string, newStr: string) {
-  let body = fs.readFileSync(f).toString();
-  for (let i = 0; i < 20; i++) {
-    body = body.replace(orig, newStr);
-  }
-  fs.writeFileSync(f, body);
-}
-
 function main() {
+  function replaceInFile(f: string, orig: string, newStr: string) {
+    let body = fs.readFileSync(f).toString();
+    for (let i = 0; i < 20; i++) {
+      body = body.replace(orig, newStr);
+    }
+    fs.writeFileSync(f, body);
+  }
+
   registerContestant(async (sourcePath, userPrompt) => {
     console.log("userPrompt", userPrompt);
     const f = `${sourcePath}/src/widget.ts`;
